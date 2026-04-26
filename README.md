@@ -314,6 +314,46 @@ Want to learn more about Jekyll? Check out [this tutorial](https://www.taniarasc
 
 For installation and deployment details please refer to [INSTALL.md](INSTALL.md).
 
+## Local Hosting (this branch)
+
+This branch (`local-dev`) contains patches to run the site locally on **Ruby 3.0** without Docker or Jupyter.
+
+### What's different from `main`
+
+| File | Change |
+|------|--------|
+| `_plugins/google-scholar-citations.rb` | Removed `activesupport` dependency (incompatible with Ruby 3.0); replaced `ActiveSupport::NumberHelper` with native Ruby number formatting |
+| `_plugins/inspirehep-citations.rb` | Same fix as above |
+| `_config.yml` | Added `assets/jupyter/` to the `exclude` list so Jekyll doesn't try to convert notebooks without `jupyter` installed |
+
+### Prerequisites
+
+```bash
+sudo apt install ruby-dev build-essential
+gem install bundler --user-install
+```
+
+### Setup & run
+
+```bash
+cd mparsonsche1859.github.io
+export PATH="$HOME/.local/share/gem/ruby/3.0.0/bin:$PATH"
+bundle config set --local path 'vendor/bundle'
+bundle install
+bundle exec jekyll serve --port 8080 --host 0.0.0.0
+```
+
+Site will be available at **http://localhost:8080/al-folio/**
+
+### Run in the background (survives closing the terminal)
+
+```bash
+export PATH="$HOME/.local/share/gem/ruby/3.0.0/bin:$PATH"
+nohup bundle exec jekyll serve --port 8080 --host 0.0.0.0 > /tmp/jekyll.log 2>&1 &
+```
+
+To stop it: `pkill -f "jekyll serve"`
+
 ## Customizing
 
 For customization details please refer to [CUSTOMIZE.md](CUSTOMIZE.md).
