@@ -1,9 +1,18 @@
-require "active_support/all"
 require 'nokogiri'
 require 'open-uri'
 
 module Helpers
-  extend ActiveSupport::NumberHelper
+  def self.number_to_human(number)
+    if number >= 1_000_000_000
+      "#{(number / 1_000_000_000.0).round(2).to_s.sub(/\.?0+$/, '')}B"
+    elsif number >= 1_000_000
+      "#{(number / 1_000_000.0).round(2).to_s.sub(/\.?0+$/, '')}M"
+    elsif number >= 1_000
+      "#{(number / 1_000.0).round(2).to_s.sub(/\.?0+$/, '')}K"
+    else
+      number.to_s
+    end
+  end
 end
 
 module Jekyll
@@ -67,7 +76,7 @@ module Jekyll
             end
           end
 
-        citation_count = Helpers.number_to_human(citation_count, :format => '%n%u', :precision => 2, :units => { :thousand => 'K', :million => 'M', :billion => 'B' })
+        citation_count = Helpers.number_to_human(citation_count)
 
       rescue Exception => e
         # Handle any errors that may occur during fetching
